@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+check_haproxy
+
+Created by Mihai Tianu on 2014-03-26.
+Copyright (c) 2014 SellerEngine. All rights reserved.
+"""
+
+import sys
+import getopt
+import urllib2
+import csv
+
+help_message = '''
+Need url
+
+Sample Usage: 
+check_haproxy xx.xx.xx.xx:xxxx/haproxy?stats
+
+'''
+
+class CheckHAProxy():
+    def __init__(self, url):
+        self.url = url
+        self.status = ''
+        try:
+            response = urllib2.urlopen("http://%s;csv" % self.url)
+            if response.code == 200:
+                hastats = [ row for row in csv.reader(response.read().splitlines())]
+                stats_row = [ index for index, value in enumerate(hastats[0:1][0]) if value == "status" ][0]
+                for row in hastats[1:]:
+                    if row[stats_row] in ["DOWN"]:
+                        self.status.append(" %s " % row[1])
+            if self.status:
+                Emit("CRITICAL", "Proxy server(s) %s - down." % self.status, 3)
+            Emit("OK", "All proxy servers up", 0)
+        except Exception,e:
+            Emit("CRITICAL", e, 3)
+
+class Emit():
+    def __init__(self, level, message, code):
+        print "{0} - {1}".format(level,message)
+        sys.exit(code)
+
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+def main(argv):
+
+    url = ''
+    try:
+        try:
+            opts, args = getopt.getopt(argv,"hu:", ["url="])
+        except getopt.GetoptError:
+            print help_message
+            sys.exit(1)
+
+        if not len(opts):
+            raise Usage(help_message)
+
+        for opt, arg in opts:
+            if opt in ("-h", "--help"):
+                raise Usage(help_message)
+            if opt in ("-u", "--url"):
+                url = arg
+
+        CheckHAProxy(url=url)
+
+    except Usage, err:
+        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
+        print >> sys.stderr, "\t for help use --help"
+        sys.exit(2)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
+
