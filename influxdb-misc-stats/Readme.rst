@@ -21,11 +21,15 @@ Sample graph query
 
 Get the backends current sessions for the specified proxy entry (backend name) for the haproxy_host_1.
 
-.. code-block:: sql
+
+.. code-block:: bash
     select scur from haproxy_host_1 where pxname = 'proxy-name' and svname = 'BACKEND' and time > now() -  8h group by time(5m);
+
+
 
 Results 
 
-.. image:: https://github.com/mihait/misc-stuff/master/influxdb-misc-stats/misc/stats_example.jpg
+
+.. image:: https://github.com/mihait/misc-stuff/raw/master/influxdb-misc-stats/misc/stats_example.jpg
 
 
