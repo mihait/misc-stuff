@@ -31,7 +31,7 @@ Invoke the script fron crontab at the desired intervals.
 Sample graph query
 ------------------
 
-Get the backends current sessions for the specified proxy entry (backend name) for the haproxy_host_1.
+Get the backends current sessions for the specified proxy entry (backend name) for the haproxy_host aggregated by 5 min.
 
 
 Query:
