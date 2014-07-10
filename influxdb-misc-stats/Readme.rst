@@ -22,8 +22,9 @@ Sample graph query
 Get the backends current sessions for the specified proxy entry (backend name) for the haproxy_host_1.
 
 
-.. code-block:: bash
-    select scur from haproxy_host_1 where pxname = 'proxy-name' and svname = 'BACKEND' and time > now() -  8h group by time(5m);
+.. code-block:: sql
+
+    select scur from haproxy_host where pxname = 'proxy-name' and svname = 'BACKEND' and time > now() -  8h group by time(5m);
 
 
 
