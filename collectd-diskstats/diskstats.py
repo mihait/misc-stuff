@@ -63,6 +63,9 @@ disksFilters = []
 prev_ts = time.time()
 
 def diskstats_config(c):
+
+    global prev_ts
+
     if c.values[0] != 'diskstats':
         return
 
@@ -75,6 +78,8 @@ def diskstats_config(c):
     prev_ts = time.time()
 
 def diskstats_read(data=None):
+
+    global prev_ts
 
     # moved some logic here mainly because
     # disks can be attached on the fly
