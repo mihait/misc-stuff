@@ -16,7 +16,7 @@ help_message = '''
 Need url
 
 Sample Usage: 
-check_haproxy xx.xx.xx.xx:xxxx/haproxy?stats
+check_haproxy -u xx.xx.xx.xx:xxxx/haproxy?stats
 
 '''
 
@@ -31,7 +31,7 @@ class CheckHAProxy():
                 stats_row = [ index for index, value in enumerate(hastats[0:1][0]) if value == "status" ][0]
                 for row in hastats[1:]:
                     if row[stats_row] in ["DOWN"]:
-                        self.status.append(" %s " % row[1])
+                        self.status += " %s " % row[1]
             if self.status:
                 Emit("CRITICAL", "Proxy server(s) %s - down." % self.status, 3)
             Emit("OK", "All proxy servers up", 0)
